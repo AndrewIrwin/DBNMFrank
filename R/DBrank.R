@@ -56,22 +56,14 @@ devfn=function(data,k,sz.ini,hw=F,distn){
   return(list(devnmf=devnmf,h1=h,w1=w,sd1=sd))
 }
 #############generate bootstrap sample
-bst.sample=function(np,nr,un,sd=NULL){
-data.bst=NULL
-  if(is.null(sd)==F){
-    for(m in 1:nr){
-      data.bst.new=stats::rnorm(np,un[m,],sd)
-      data.bst=rbind(data.bst,data.bst.new)
-    }
+bst.sample=function(np, nr, un, sd = NULL) {
+  if (!is.null(sd)) {
+    data.bst = t(matrix(stats::rnorm(np*nr, t(un), sd), np, nr))
     data.bst[which(data.bst<0)]=0
+  } else {
+    data.bst = t(matrix(stats::rpois(np*nr, t(un)), np, nr))
   }
-  else{
-    for(m in 1:nr){
-      data.bst.new=stats::rpois(np,un[m,])
-      data.bst=rbind(data.bst,data.bst.new)
-    }
-  }
-return(data.bst=data.bst)
+  return(data.bst = data.bst)
 }
 
 ###########the hyphothesis test of rank k vs. rank larger than k.
